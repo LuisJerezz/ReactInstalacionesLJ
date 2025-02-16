@@ -13,7 +13,6 @@ function NavBar() {
   const location = useLocation(); // Obtiene la ubicación actual
   const navigate = useNavigate(); // Ahora useNavigate tiene acceso al contexto del Router
   
-
   // Se ejecuta cada vez que cambia la ruta
   useEffect(() => {
     const token = getToken();
@@ -22,22 +21,21 @@ function NavBar() {
     if (isLogged) {
       const peticion = async () => {
         try {
-            const response = await api.get('/usuario');
-            setTipoUsuario(response.data.tipo);
+            const response = await api.get('/usuario'); // Aquí hacemos la petición para obtener el tipo de usuario
+            setTipoUsuario(response.data.tipo); // Suponiendo que la respuesta tiene un campo 'tipo'
         } catch (err) {
-            // setError('No se puede completar la operación');
-            navigate('/login')
+            navigate('/login'); // Redirige al login si no se puede obtener el tipo
             console.log(err);
         }
       };
       peticion();
-      
     }
   }, [location]);
 
   const handleLogout = () => {
     clearToken();
     setIsLogged(false);
+    setTipoUsuario(''); // Limpiar tipo de usuario
     navigate('/login');
   };
 
@@ -51,13 +49,14 @@ function NavBar() {
         <Navbar.Collapse id="basic-navbar-nav">        
           <Nav className="me-auto">
             <Nav.Link as={Link} to="/">Home</Nav.Link>
-            {tipoUsuario == 'ADMIN' ? (
-                  <>
-                    <Nav.Link as={Link} to="/instalaciones">Instalaciones</Nav.Link>
-                  </>
-            ): (<></>)}
+            {tipoUsuario === 'ADMIN' && ( // Si es ADMIN, muestra la opción de Instalaciones
+              <>
+                <Nav.Link as={Link} to="/instalaciones">Instalaciones</Nav.Link>
+                <Nav.Link as={Link} to="/usuario">Usuarios</Nav.Link> {/* Añadido para ir a la lista de usuarios */}
+              </>
+            )}
             {isLogged ? (
-              <>                                
+              <>                                 
                 <Nav.Link as={Link} to="/mis-reservas">Mis reservas</Nav.Link>
                 <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
               </>
