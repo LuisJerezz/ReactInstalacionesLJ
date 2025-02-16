@@ -1,4 +1,3 @@
-// App.jsx o donde definas el enrutador
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import RootLayout from "./components/RootLayout";
@@ -8,9 +7,10 @@ import InstalacionesPage from "./pages/InstalacionesPage";
 import InstalacionDeletePage from "./pages/InstalacionDeletePage";
 import InstalacionFormPage from "./pages/InstalacionFormPage";
 import ReservasPage from "./pages/ReservasPage";
+import ReservaFormPage from "./pages/ReservaFormPage"; // Añade la página de formulario
+import ReservaDeletePage from "./pages/ReservaDeletePage"; // Añade la página de eliminar reserva
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-
 
 const router = createBrowserRouter([
   {
@@ -44,6 +44,18 @@ const router = createBrowserRouter([
       {
         path: "mis-reservas",
         element: <ReservasPage />,
+      },
+      {
+        path: "mis-reservas/add",
+        element: <ReservaFormPage />, // Ruta para añadir una reserva
+      },
+      {
+        path: "mis-reservas/edit/:id",
+        element: <ReservaFormPage />, // Ruta para editar una reserva
+      },
+      {
+        path: "mis-reservas/del/:id",
+        element: <ReservaDeletePage />, // Ruta para eliminar una reserva
       },
     ],
   },
