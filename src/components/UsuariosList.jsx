@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import { Button, Container, Table } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { Container, Table, Button } from "react-bootstrap";
 import api from "../services/api";
+import { Link, useNavigate } from "react-router-dom";
 
-const UsuariosList = () => {
+const UsuarioList = () => {
     const [usuarios, setUsuarios] = useState([]);
     const navigate = useNavigate();
 
-    useEffect(() => { 
+    useEffect(() => {
         const peticion = async () => {
             try {
                 const response = await api.get('/admin/usuario');
@@ -18,35 +18,31 @@ const UsuariosList = () => {
             }
         };
         peticion();
-    }, []); 
+    }, []);
 
     return (
         <Container>
-            <Table>
+            <Table className="mt-3">
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Username</th>
+                        <th>Nombre</th>
                         <th>Email</th>
                         <th>Editar</th>
                         <th>Borrar</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {usuarios.map((usuario) => (
+                    {usuarios.map(usuario => (
                         <tr key={usuario.id}>
                             <td>{usuario.id}</td>
                             <td>{usuario.username}</td>
                             <td>{usuario.email}</td>
                             <td>
-                                <Button as={Link} to={`/usuario/edit/${usuario.id}`} className="btn-success">
-                                    Editar
-                                </Button>
+                                <Button as={Link} to={`/admin/usuario/edit/${usuario.id}`} className="btn-success">Editar</Button>
                             </td>
                             <td>
-                                <Button as={Link} to={`/usuario/del/${usuario.id}`} className="btn-danger">
-                                    Eliminar
-                                </Button>
+                                <Button as={Link} to={`/admin/usuario/del/${usuario.id}`} className="btn-danger">Eliminar</Button>
                             </td>
                         </tr>
                     ))}
@@ -56,4 +52,4 @@ const UsuariosList = () => {
     );
 };
 
-export default UsuariosList;
+export default UsuarioList;

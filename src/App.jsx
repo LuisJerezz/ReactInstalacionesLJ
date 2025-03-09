@@ -1,5 +1,4 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-
 import RootLayout from "./components/RootLayout";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
@@ -7,15 +6,12 @@ import InstalacionesPage from "./pages/InstalacionesPage";
 import InstalacionDeletePage from "./pages/InstalacionDeletePage";
 import InstalacionFormPage from "./pages/InstalacionFormPage";
 import ReservasPage from "./pages/ReservasPage";
-import ReservaFormPage from "./pages/ReservaFormPage"; 
-import ReservaDeletePage from "./pages/ReservaDeletePage"; 
-
-// Agregadas las páginas de usuario
-import UsuariosPage from "./pages/UsuariosPage"; // Página de listado de usuarios
-import UsuarioFormPage from "./pages/UsuarioFormPage"; // Página para añadir/editar un usuario
-import UsuarioDeletePage from "./pages/UsuarioDeletePage"; // Página para eliminar un usuario
-
+import CrearReserva from "./components/CrearReserva";
+import UsuarioPage from "./pages/UsuarioPage";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import UsuarioForm from "./components/UsuarioForm";
+import MisReservasBorrar from "./components/MisReservasBorrar";
+import MisReservasEdit from "./components/MisReservasEdit";
 
 const router = createBrowserRouter([
   {
@@ -23,7 +19,7 @@ const router = createBrowserRouter([
     element: <RootLayout />,
     children: [
       {
-        index: true, // Ruta principal ("/")
+        index: true, // Ruta por defecto para "/"
         element: <HomePage />,
       },
       {
@@ -39,11 +35,11 @@ const router = createBrowserRouter([
         element: <InstalacionFormPage />,
       },
       {
-        path: "instalacion/edit/:id",
+        path: "instalacion/edit/:id", // Usando :id para capturar el parámetro
         element: <InstalacionFormPage />,
       },
       {
-        path: "instalacion/del/:id",
+        path: "instalacion/del/:id", // Usando :id para capturar el parámetro
         element: <InstalacionDeletePage />,
       },
       {
@@ -52,34 +48,32 @@ const router = createBrowserRouter([
       },
       {
         path: "mis-reservas/add",
-        element: <ReservaFormPage />, // Añadir reserva
-      },
-      {
-        path: "mis-reservas/edit/:id",
-        element: <ReservaFormPage />, // Editar reserva
+        element: <CrearReserva />,
       },
       {
         path: "mis-reservas/del/:id",
-        element: <ReservaDeletePage />, // Eliminar reserva
+        element: <MisReservasBorrar />,
       },
-      
-      // Rutas para los usuarios
       {
-        path: "usuario",
-        element: <UsuariosPage />, // Listado de usuarios
+        path: "mis-reservas/edit/:id",
+        element: <MisReservasEdit />,
+      },
+      {
+        path: "usuario", // Verifica si esta ruta requiere parámetros
+        element: <UsuarioPage />,
       },
       {
         path: "usuario/add",
-        element: <UsuarioFormPage />, // Añadir usuario
+        element: <UsuarioForm />
       },
       {
-        path: "usuario/edit/:id",
-        element: <UsuarioFormPage />, // Editar usuario
+        path: "admin/usuario/edit/:id",
+        element: <UsuarioForm />
       },
       {
-        path: "usuario/del/:id",
-        element: <UsuarioDeletePage />, // Eliminar usuario
-      },
+        path: "admin/usuario/del/:id",
+        element: <UsuarioForm />
+      }
     ],
   },
 ]);

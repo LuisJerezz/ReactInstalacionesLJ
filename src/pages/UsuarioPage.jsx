@@ -2,7 +2,7 @@ import { Button } from "react-bootstrap";
 import UsuariosList from "../components/UsuariosList";
 import { Link } from "react-router-dom";
 
-const UsuariosPage = () => {
+const UsuarioPage = () => {
     return (
         <>
             <h3>Listado de usuarios</h3>
@@ -14,4 +14,4 @@ const UsuariosPage = () => {
     );
 };
 
-export default UsuariosPage;
+export default UsuarioPage;
