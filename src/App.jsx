@@ -1,15 +1,20 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import RootLayout from "./components/RootLayout";
+
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import InstalacionesPage from "./pages/InstalacionesPage";
 import InstalacionDeletePage from "./pages/InstalacionDeletePage";
 import InstalacionFormPage from "./pages/InstalacionFormPage";
 import ReservasPage from "./pages/ReservasPage";
-import CrearReserva from "./components/CrearReserva";
-import UsuarioPage from "./pages/UsuarioPage";
+
 import 'bootstrap/dist/css/bootstrap.min.css';
-import UsuarioForm from "./components/UsuarioForm";
+
+import UsuariosPage from "./pages/UsuariosPage"; 
+import UsuarioFormPage from "./pages/UsuarioFormPage"; 
+import UsuarioDeletePage from "./pages/UsuarioDeletePage"; 
+
+import RootLayout from "./components/RootLayout";
+import CrearReserva from "./components/CrearReserva";
 import MisReservasBorrar from "./components/MisReservasBorrar";
 import MisReservasEdit from "./components/MisReservasEdit";
 
@@ -59,20 +64,20 @@ const router = createBrowserRouter([
         element: <MisReservasEdit />,
       },
       {
-        path: "usuario", // Verifica si esta ruta requiere parámetros
-        element: <UsuarioPage />,
+        path: "usuarios",
+        element: <UsuariosPage/>
       },
       {
-        path: "usuario/add",
-        element: <UsuarioForm />
+        path: "usuarios/edit/:id",
+        element: <UsuarioFormPage />,
       },
       {
-        path: "admin/usuario/edit/:id",
-        element: <UsuarioForm />
+        path: "usuarios/del/:id",
+        element: <UsuarioDeletePage />,
       },
       {
-        path: "admin/usuario/del/:id",
-        element: <UsuarioForm />
+        path: "usuarios/add",
+        element: <UsuarioFormPage />, 
       }
     ],
   },

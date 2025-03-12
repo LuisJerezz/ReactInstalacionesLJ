@@ -1,127 +1,162 @@
 import { useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-import api from "../services/api";
+import api from "../services/api"; 
 
 const UsuarioForm = () => {
     let { id } = useParams();
-    const [nombre, setNombre] = useState("");
-    const [password, setPassword] = useState("");
-    const [email, setEmail] = useState("");
-    const [enable, setEnable] = useState(false);
-    const [rol, setRol] = useState("ADMIN");
-    const [error, setError] = useState("");
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [tipo, setTipo] = useState('');
+    const [enabled, setEnabled] = useState(true);
+    const [error, setError] = useState('');
     const navigate = useNavigate();
     const ruta = useLocation();
 
     const estado = () => {
-        if (ruta.pathname.includes("add")) return "add";
-        if (ruta.pathname.includes("edit")) return "edit";
-        if (ruta.pathname.includes("del")) return "del";
+        if (ruta.pathname.includes('add')) return 'add';
+        if (ruta.pathname.includes('del')) return 'del';
+        if (ruta.pathname.includes('edit')) return 'edit';
     };
 
-    const manejaAtras = async(event) => {
+    const manejaForm = async (event) => {
+        event.preventDefault();
+        try {
+            const response = await api.post('/admin/usuario', { username, email, password, tipo, enabled });
+            console.log(response);
+            navigate('/usuarios');
+        } catch (err) {
+            setError('No se puede completar la petición');
+            console.log(err);
+        }
+    };
+
+    const updateForm = async (event) => {
+        event.preventDefault();
+        try {
+            const response = await api.put('/admin/usuario/' + id, { username, email, password, tipo, enabled });
+            console.log(response);
+            navigate('/usuarios');
+        } catch (err) {
+            setError('No se puede completar la petición');
+            console.log(err);
+        }
+    };
+
+    const deleteForm = async (event) => {
+        event.preventDefault();
+        try {
+            const response = await api.delete('/admin/usuario/' + id);
+            console.log(response);
+            navigate('/usuarios');
+        } catch (err) {
+            setError('No se puede completar la petición');
+            console.log(err);
+        }
+    };
+
+    const manejaAtras = async (event) => {
         event.preventDefault();
         navigate(-1);
-    }
-
-    const manejarUsuario = async (event) => {
-        event.preventDefault();
-
-        const usuarioData = { enable, nombre, email, rol };
-        if (estado() === "add") {
-            usuarioData.password = password;
-        }
-
-        try {
-            if (estado() === "add") {
-                await api.post("/admin/usuario", usuarioData);
-            } else {
-                await api.put(`/admin/usuario/${id}`, usuarioData);
-            }
-            navigate("/admin/usuario");
-        } catch (error) {
-            if (error.response?.status === 401) {
-                navigate('/login');
-            } else {
-                setError("No se puede completar la operación");
-            }
-        }
     };
 
     useEffect(() => {
         const peticion = async () => {
-            if (id && !isNaN(id)) {
+            if (!isNaN(id)) {
                 try {
-                    const response = await api.get(`/admin/usuario/${id}`);
-                    setNombre(response.data.nombre || "");  
-                    setEmail(response.data.email || "");  
-                    setEnable(!!response.data.enable);
-                    setRol(response.data.rol || "ADMIN");  
-                } catch (error) {
-                    if (error.response?.status === 401) {
-                        navigate('/login');
-                    } else {
-                        console.error("No se puede completar la operación", error);
-                    }
+                    const response = await api.get('/admin/usuario/' + id);
+                    setUsername(response.data.username)
+                    setEmail(response.data.email);
+                    setTipo(response.data.tipo);
+                    setEnabled(response.data.enabled);
+                } catch (err) {
+                    setError('No se puede completar la operación');
+                    console.log(err);
                 }
             }
         };
-        if (estado() !== "add") {
-            peticion();
-        }
-    }, [id, navigate]);  
-
+        peticion();
+    }, [id]);
     return (
-        <Form onSubmit={manejarUsuario}>
+        <Form>
             <Form.Group className="mb-3">
-                <Form.Label>Nombre:</Form.Label>
+                <Form.Label>ID:</Form.Label>
                 <Form.Control
                     type="text"
-                    placeholder="Nombre del usuario"
-                    value={nombre || ""}
-                    onChange={(e) => setNombre(e.target.value)}
+                    placeholder="ID de Usuario"
+                    aria-label="Identificador de Usuario"
+                    disabled
+                    value={id}
                 />
             </Form.Group>
-            {estado() === "add" && (
-                <Form.Group className="mb-3">
-                    <Form.Label>Password:</Form.Label>
-                    <Form.Control
-                        type="password"
-                        placeholder="Password del usuario"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                </Form.Group>
-            )}
+            <Form.Group className="mb-3">
+                <Form.Label>Username:</Form.Label>
+                <Form.Control
+                    type="text"
+                    placeholder="Username de Usuario"
+                    aria-label="Username de Usuario"
+                    value={username}
+                    disabled={estado() === 'del' ? true : false}
+                    onChange={(e) => setUsername(e.target.value)}
+                />
+            </Form.Group>
             <Form.Group className="mb-3">
                 <Form.Label>Email:</Form.Label>
                 <Form.Control
                     type="email"
-                    placeholder="Email del usuario"
-                    value={email || ""}
+                    placeholder="Email de Usuario"
+                    aria-label="Email de Usuario"
+                    value={email}
+                    disabled={estado() === 'del' ? true : false}
                     onChange={(e) => setEmail(e.target.value)}
                 />
             </Form.Group>
             <Form.Group className="mb-3">
-                <Form.Label>Rol:</Form.Label>
+                <Form.Label>Password:</Form.Label>
                 <Form.Control
-                    as="select"
-                    value={rol || "ADMIN"}
-                    onChange={(e) => setRol(e.target.value)}
+                    type="password"
+                    placeholder="Password"
+                    aria-label="Password"
+                    value={password}
+                    disabled={estado() === 'del' ? true : false}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
+            </Form.Group>
+            <Form.Group className="mb-3">
+                <Form.Label>Tipo:</Form.Label>
+                <Form.Select
+                    value={tipo}
+                    disabled={estado() === 'del' ? true : false}
+                    onChange={(e) => setTipo(e.target.value)}
                 >
                     <option value="ADMIN">ADMIN</option>
                     <option value="OPERARIO">OPERARIO</option>
                     <option value="USUARIO">USUARIO</option>
-                </Form.Control>
+                </Form.Select>
             </Form.Group>
-            <Button type="submit" className="btn-success">
-                {estado() === "add" ? "Alta" : "Actualizar"}
-            </Button>
-            <Button as={Link} onClick={manejaAtras} >
+            <Form.Group className="mb-3">
+                <Form.Check
+                    type="checkbox"
+                    label="Habilitado"
+                    checked={enabled}
+                    disabled={estado() === 'del' ? true : false}
+                    onChange={(e) => setEnabled(e.target.checked)}
+                />
+            </Form.Group>
+            <Form.Group className="mb-3">
+                {
+                    {
+                        'add': <Button className="btn-success" onClick={manejaForm}>Alta</Button>,
+                        'edit': <Button className="btn-success" onClick={updateForm}>Actualizar</Button>,
+                        'del': <Button className="btn-danger" onClick={deleteForm}>Borrar</Button>
+                    } [estado()]
+                }
+                <Button as={Link} onClick={manejaAtras}>
                     Cancelar
-            </Button>
-            {error && <p style={{ color: "red" }}>{error}</p>}
+                </Button>
+            </Form.Group>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
         </Form>
     );
 };

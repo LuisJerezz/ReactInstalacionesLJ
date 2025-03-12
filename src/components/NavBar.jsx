@@ -58,7 +58,7 @@ function NavBar() {
                 <Nav.Link as={Link} to="/instalaciones">
                   Instalaciones
                 </Nav.Link>
-                <Nav.Link as={Link} to="/usuario">
+                <Nav.Link as={Link} to="/usuarios">
                   Usuarios
                 </Nav.Link>{" "}
                 {/* Agregamos el link */}
